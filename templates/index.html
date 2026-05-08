@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fraud Detection Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <h1>💳 Credit Card Fraud Detection System</h1>
+    <h4>Model Accuracy: {{ accuracy }}%</h4>
+
+    <div class="row">
+
+        <!-- LEFT PANEL -->
+        <div class="card">
+
+            <h3>Transaction Input</h3>
+
+            <form action="/predict" method="post">
+
+                <input name="Time" placeholder="Time (0-172000)">
+                <input name="Amount" placeholder="Amount (0-25000)">
+
+                <input name="V1" placeholder="V1 (-5 to +5)">
+                <input name="V2" placeholder="V2 (-5 to +5)">
+                <input name="V3" placeholder="V3 (-5 to +5)">
+                <input name="V4" placeholder="V4 (-5 to +5)">
+
+                <button type="submit">🔍 Predict Fraud</button>
+
+            </form>
+
+            <!-- NORMAL vs FRAUD RANGE -->
+            <div class="info-box">
+
+                <div class="range-container">
+
+                    <div class="range-card normal">
+                        <h3>Normal Range</h3>
+                        <p>Time: 27k → 163k</p>
+                        <p>Amount: 0.89 → 350</p>
+                        <p>V1: -3 → +2</p>
+                        <p>V2: -2 → +2</p>
+                        <p>V3: -2.3 → +2</p>
+                        <p>V4: -2 → +2.5</p>
+                    </div>
+
+                    <div class="range-card fraud">
+                        <h3>Fraud Range</h3>
+                        <p>Time: 41k → 154k</p>
+                        <p>Amount: 5 → 1096</p>
+                        <p>V1: -16 → -0.07</p>
+                        <p>V2: -3.9 → +8.5</p>
+                        <p>V3: -18 → -0.7</p>
+                        <p>V4: +0.08 → +9.5</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- CENTER PANEL -->
+        <div class="card center">
+
+            <h3>Result & Analysis</h3>
+
+            <div class="result">
+                {{ prediction_text }}
+            </div>
+
+            {% if explanation %}
+            <div class="info">
+                <h4>Analysis</h4>
+                <p>{{ explanation }}</p>
+            </div>
+            {% endif %}
+
+            <!-- PIE CHART INSIDE CENTER -->
+            <div class="chart-box">
+
+                <h4>Fraud Probability</h4>
+
+                {% if chart %}
+                    <img src="data:image/png;base64,{{ chart }}">
+                {% else %}
+                    <p>No prediction yet</p>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <!-- RIGHT PANEL -->
+        <div class="card">
+
+            <h3>System Info</h3>
+
+            <p>This model detects fraudulent credit card transactions using ML.</p>
+
+            <p>✔ Safe transactions are shown in green</p>
+            <p>❌ Fraud transactions are flagged in red</p>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
